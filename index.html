@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline Tetris</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="hud">
+        <div class="scoreboard">
+          <span class="label">HI</span>
+          <span class="high-score">000000</span>
+          <span class="score">000000</span>
+        </div>
+        <div class="controls-hint controls-hint--desktop" aria-hidden="true">
+          ← → move • ↑ rotate • space drop
+        </div>
+        <div class="controls-hint controls-hint--mobile">
+          tap left/right move • tap top rotate • tap bottom drop
+        </div>
+      </header>
+      <section class="playfield">
+        <canvas id="game-canvas" width="360" height="720"></canvas>
+        <div class="ground-line"></div>
+      </section>
+      <section class="overlay overlay--hidden" id="game-over">
+        <div class="overlay-card">
+          <h1>Game Over</h1>
+          <p class="final-scoreboard">
+            <span class="label">HI</span>
+            <span class="final-high-score">000000</span>
+            <span class="final-current-score">000000</span>
+          </p>
+          <button class="btn" id="restart-btn">Restart</button>
+          <button class="btn" id="share-btn">Download Share Image</button>
+          <div class="share-preview">
+            <canvas
+              id="share-canvas"
+              width="600"
+              height="315"
+              aria-hidden="true"
+            ></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="credits">
+      Made with <span class="heart" aria-hidden="true">❤️</span> by
+      <a href="https://x.com/dijkstradev" target="_blank" rel="noopener noreferrer">@dijkstradev</a>
+    </footer>
+    <script src="script.js" defer></script>
+  </body>
+</html>
