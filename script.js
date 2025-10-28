@@ -194,6 +194,8 @@ function resetGame() {
   score = 0;
   lines = 0;
   state = { running: false, over: false, started: false };
+  touchPointer.active = false;
+  touchPointer.pointerId = null;
   overlay.classList.add("overlay--hidden");
   spawnPiece();
   updateScoreboard();
@@ -429,7 +431,12 @@ function drawCell(gridX, gridY, color, ghost = false) {
     ctx.lineWidth = 1.5;
     ctx.strokeRect(x + inset, y + inset, CELL - inset * 2, CELL - inset * 2);
     ctx.fillStyle = COLORS.shadow;
-    ctx.fillRect(x + inset, y + inset + (CELL - inset * 2) - 6, CELL - inset * 2, 6);
+    ctx.fillRect(
+      x + inset,
+      y + inset + (CELL - inset * 2) - 6,
+      CELL - inset * 2,
+      6
+    );
   }
 }
 

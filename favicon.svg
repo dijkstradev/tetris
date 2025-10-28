@@ -1,14 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="8" fill="#1f1f1f"/>
-  <g transform="translate(12 12)">
-    <rect x="0" y="18" width="14" height="14" fill="#4c74ff" rx="2"/>
-    <rect x="16" y="18" width="14" height="14" fill="#4c74ff" rx="2"/>
-    <rect x="32" y="18" width="14" height="14" fill="#62f2ff" rx="2"/>
-    <rect x="32" y="2" width="14" height="14" fill="#62f2ff" rx="2"/>
-    <rect x="16" y="2" width="14" height="14" fill="#f7a54a" rx="2"/>
-    <rect x="0" y="2" width="14" height="14" fill="#f76d6d" rx="2"/>
-    <rect x="0" y="34" width="14" height="14" fill="#66df81" rx="2"/>
-    <rect x="16" y="34" width="14" height="14" fill="#f7f45a" rx="2"/>
-    <rect x="32" y="34" width="14" height="14" fill="#c47bff" rx="2"/>
+  <g transform="translate(18 10)">
+    <rect x="0" y="0" width="14" height="14" rx="3" fill="#f7a54a"/>
+    <rect x="0" y="16" width="14" height="14" rx="3" fill="#f7a54a"/>
+    <rect x="0" y="32" width="14" height="14" rx="3" fill="#f7a54a"/>
+    <rect x="16" y="32" width="14" height="14" rx="3" fill="#f7a54a"/>
   </g>
 </svg>
