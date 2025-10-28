@@ -567,9 +567,9 @@ function handleTouchTap(clientX, clientY, rect) {
   const pieceRight = pieceLeft + pieceWidth - 1;
   const pieceTop = Math.max(piece.y, 0);
   const pieceBottom = pieceTop + pieceHeight - 1;
-  const withinHorizontalBand = col >= pieceLeft - 2 && col <= pieceRight + 2;
+  const withinPieceWidth = col >= pieceLeft && col <= pieceRight;
 
-  if ((row < pieceTop || row > pieceBottom) && withinHorizontalBand) {
+  if ((row < pieceTop || row > pieceBottom) && withinPieceWidth) {
     rotatePiece();
     return;
   }
@@ -584,7 +584,7 @@ function handleTouchTap(clientX, clientY, rect) {
     return;
   }
 
-  if (withinHorizontalBand) {
+  if (withinPieceWidth) {
     rotatePiece();
   }
 }
