@@ -3,7 +3,6 @@ const ctx = canvas.getContext("2d");
 const overlay = document.getElementById("game-over");
 const finalHighScoreEl = document.querySelector(".final-high-score");
 const finalCurrentScoreEl = document.querySelector(".final-current-score");
-const linesClearedEl = document.querySelector(".lines-cleared");
 const scoreEl = document.querySelector(".score");
 const highScoreEl = document.querySelector(".high-score");
 const restartBtn = document.getElementById("restart-btn");
@@ -35,6 +34,15 @@ const COLORS = {
 };
 
 const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+
+const SWIPE_THRESHOLD_PX = 40;
+
+const touchPointer = {
+  active: false,
+  pointerId: null,
+  startX: 0,
+  startY: 0,
+};
 
 const SHAPES = {
   I: [
@@ -509,32 +517,84 @@ function handleKeyDown(event) {
   }
 }
 
-function handlePointerDrop(event) {
+function handlePointerDown(event) {
+  if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+  touchPointer.active = true;
+  touchPointer.pointerId = event.pointerId;
+  touchPointer.startX = event.clientX;
+  touchPointer.startY = event.clientY;
   event.preventDefault();
+}
+
+function handlePointerUp(event) {
+  if (!touchPointer.active || event.pointerId !== touchPointer.pointerId) return;
+  event.preventDefault();
+  touchPointer.active = false;
+
   if (state.over) return;
 
+  const deltaX = event.clientX - touchPointer.startX;
+  const deltaY = event.clientY - touchPointer.startY;
   const rect = canvas.getBoundingClientRect();
-  const relativeX = (event.clientX - rect.left) / rect.width;
-  const relativeY = (event.clientY - rect.top) / rect.height;
-  const isTouch = event.pointerType === "touch" || event.pointerType === "pen";
 
-  if (!state.started) startGame();
-
-  if (!isTouch) return;
-
-  if (relativeY <= 0.25) {
-    rotatePiece();
-  } else if (relativeY >= 0.75) {
-    movePiece(0, 1);
-    score += 5;
-    updateScoreboard();
-  } else if (relativeX <= 0.33) {
-    movePiece(-1, 0);
-  } else if (relativeX >= 0.67) {
-    movePiece(1, 0);
-  } else {
-    hardDrop();
+  if (deltaY > SWIPE_THRESHOLD_PX && Math.abs(deltaY) > Math.abs(deltaX)) {
+    if (!state.started) startGame();
+    if (!state.over) {
+      hardDrop();
+    }
+    return;
   }
+
+  handleTouchTap(event.clientX, event.clientY, rect);
+}
+
+function handlePointerCancel(event) {
+  if (event.pointerId === touchPointer.pointerId) {
+    touchPointer.active = false;
+  }
+}
+
+function handleTouchTap(clientX, clientY, rect) {
+  if (state.over) return;
+  if (!state.started) startGame();
+  if (!currentPiece) return;
+
+  const { col, row } = getGridPosition(clientX, clientY, rect);
+  const piece = currentPiece;
+  const pieceWidth = piece.matrix[0].length;
+  const pieceHeight = piece.matrix.length;
+  const pieceLeft = piece.x;
+  const pieceRight = pieceLeft + pieceWidth - 1;
+  const pieceTop = Math.max(piece.y, 0);
+  const pieceBottom = pieceTop + pieceHeight - 1;
+  const withinHorizontalBand = col >= pieceLeft - 2 && col <= pieceRight + 2;
+
+  if ((row < pieceTop || row > pieceBottom) && withinHorizontalBand) {
+    rotatePiece();
+    return;
+  }
+
+  if (col < pieceLeft) {
+    movePiece(-1, 0);
+    return;
+  }
+
+  if (col > pieceRight) {
+    movePiece(1, 0);
+    return;
+  }
+
+  if (withinHorizontalBand) {
+    rotatePiece();
+  }
+}
+
+function getGridPosition(clientX, clientY, rect = canvas.getBoundingClientRect()) {
+  const relX = (clientX - rect.left) / rect.width;
+  const relY = (clientY - rect.top) / rect.height;
+  const col = Math.floor(relX * COLS);
+  const row = Math.floor(relY * ROWS);
+  return { col, row };
 }
 
 function renderShareCard() {
@@ -589,7 +649,9 @@ function init() {
 }
 
 document.addEventListener("keydown", handleKeyDown, { passive: false });
-canvas.addEventListener("pointerdown", handlePointerDrop, { passive: false });
+canvas.addEventListener("pointerdown", handlePointerDown, { passive: false });
+canvas.addEventListener("pointerup", handlePointerUp, { passive: false });
+canvas.addEventListener("pointercancel", handlePointerCancel, { passive: false });
 restartBtn.addEventListener("click", resetGame);
 shareBtn.addEventListener("click", downloadShareImage);
 
