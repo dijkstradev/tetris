@@ -297,7 +297,7 @@ function rotatePiece() {
   const { rotations, rotationIndex } = currentPiece;
   const nextIndex = (rotationIndex + 1) % rotations.length;
   const nextMatrix = rotations[nextIndex];
-  const kicks = [-1, 1, -2, 2, 0];
+  const kicks = [0, -1, 1, -2, 2];
   for (const kick of kicks) {
     if (!collides(currentPiece, kick, 0, nextMatrix)) {
       currentPiece.rotationIndex = nextIndex;
@@ -520,24 +520,21 @@ function handlePointerDrop(event) {
 
   if (!state.started) startGame();
 
-  if (isTouch) {
-    if (relativeY <= 0.25) {
-      rotatePiece();
-    } else if (relativeY >= 0.75) {
-      movePiece(0, 1);
-      score += 5;
-      updateScoreboard();
-    } else if (relativeX <= 0.33) {
-      movePiece(-1, 0);
-    } else if (relativeX >= 0.67) {
-      movePiece(1, 0);
-    } else {
-      hardDrop();
-    }
-    return;
-  }
+  if (!isTouch) return;
 
-  hardDrop();
+  if (relativeY <= 0.25) {
+    rotatePiece();
+  } else if (relativeY >= 0.75) {
+    movePiece(0, 1);
+    score += 5;
+    updateScoreboard();
+  } else if (relativeX <= 0.33) {
+    movePiece(-1, 0);
+  } else if (relativeX >= 0.67) {
+    movePiece(1, 0);
+  } else {
+    hardDrop();
+  }
 }
 
 function renderShareCard() {
