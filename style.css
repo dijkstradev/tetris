@@ -26,6 +26,9 @@ body {
   min-height: 100vh;
   gap: 20px;
   padding: 32px 12px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .game-shell {
